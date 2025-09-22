@@ -1,6 +1,5 @@
 #include "lists.h"
 #include <stdlib.h>
-
 /**
  * delete_dnodeint_at_index - Delete a node at a specific index from a list
  *
@@ -11,31 +10,43 @@
  */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
-	dlistint_t *current;
-	unsigned int i;
-
-	if (head == NULL || *head == NULL)
+	dlistint_t *saved_head;
+	dlistint_t *tmp;
+	unsigned int p;
+	if (*head == NULL)
+	{
 		return (-1);
-
-	current = *head;
-
-	/* Navigate to the node at the specified index */
-	for (i = 0; i < index && current != NULL; i++)
-		current = current->next;
-
-	/* If we couldn't reach the index */
-	if (current == NULL)
+	}
+	saved_head = *head;
+	p = 0;
+	while (p < index && *head != NULL)
+	{
+		*head = (*head)->next;
+		p++;
+	}
+	if (p != index)
+	{
+		*head = saved_head;
 		return (-1);
-
-	/* Update links before freeing */
-	if (current->prev != NULL)
-		current->prev->next = current->next;
+	}
+	if (0 == index)
+	{
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+		if (tmp != NULL)
+		{
+			tmp->prev = NULL;
+		}
+	}
 	else
-		*head = current->next; /* Deleting first node */
-
-	if (current->next != NULL)
-		current->next->prev = current->prev;
-
-	free(current);
+	{
+		tmp = *head;  // AJOUT: sauvegarder le nœud à supprimer
+		(*head)->prev->next = (*head)->next;  // CORRECTION: next au lieu de prev
+		if ((*head)->next)
+			(*head)->next->prev = (*head)->prev;
+		*head = saved_head;
+		free(tmp);  // CORRECTION: free tmp au lieu de *head
+	}
 	return (1);
 }
