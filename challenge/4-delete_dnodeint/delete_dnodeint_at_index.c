@@ -41,12 +41,12 @@ int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 	}
 	else
 	{
-		tmp = *head;  // AJOUT: sauvegarder le nœud à supprimer
-		(*head)->prev->next = (*head)->next;  // CORRECTION: next au lieu de prev
+		tmp = *head;
+		(*head)->prev->next = (*head)->next;
 		if ((*head)->next)
 			(*head)->next->prev = (*head)->prev;
 		*head = saved_head;
-		free(tmp);  // CORRECTION: free tmp au lieu de *head
+		free(tmp);
 	}
 	return (1);
 }
